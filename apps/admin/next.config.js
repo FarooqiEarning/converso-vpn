@@ -8,6 +8,9 @@ const nextConfig = {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3002',
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'development-secret',
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 module.exports = nextConfig

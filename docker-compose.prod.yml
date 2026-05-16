@@ -8,11 +8,6 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - app_network
 
@@ -37,15 +32,9 @@ services:
       - "3000:3000"
     depends_on:
       postgres:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_started
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/v1', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
     networks:
       - app_network
 
@@ -81,8 +70,6 @@ services:
       - certbot_www:/var/www/certbot
       - nginx_cache:/var/cache/nginx
     depends_on:
-      api:
-        condition: service_healthy
       web:
         condition: service_healthy
     networks:

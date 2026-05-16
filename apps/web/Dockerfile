@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install -g turbo
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . .
 RUN npm run build

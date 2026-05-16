@@ -38,20 +38,20 @@
 
 ```bash
 # Deploy main server
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker compose.prod.yml up -d
 
 # Deploy VPN node
 ./deploy-node.sh <name> <id> <ip> <secret> <url>
 
 # Check status
-docker-compose ps
+docker compose ps
 
 # View logs
 docker logs converso-api
 docker logs converso-web
 
 # Restart service
-docker-compose restart api
+docker compose restart api
 
 # Database backup
 docker exec converso-postgres pg_dump -U converso_user converso_vpn > backup.sql

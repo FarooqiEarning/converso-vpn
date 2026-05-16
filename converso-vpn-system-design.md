@@ -69,7 +69,7 @@ RULE 7 — TESTING:
 
 RULE 8 — DOCKER & INFRA:
   - Every service ships with a production Dockerfile (multi-stage builds)
-  - docker-compose for local dev, Kubernetes manifests for production
+  - docker compose for local dev, Kubernetes manifests for production
   - Never run containers as root
   - Health checks in every Dockerfile
 
@@ -239,8 +239,8 @@ converso-vpn/
 │   │   └── dashboards/
 │   └── loki/
 │
-├── docker-compose.yml              # Full local dev stack
-├── docker-compose.prod.yml
+├── docker compose.yml              # Full local dev stack
+├── docker compose.prod.yml
 ├── .env.example
 ├── turbo.json                      # Turborepo config
 ├── package.json                    # Root workspace
@@ -769,7 +769,7 @@ Requirements:
 ## 🐳 DOCKER COMPOSE (LOCAL DEVELOPMENT)
 
 ```yaml
-# docker-compose.yml — Converso VPN Full Local Stack
+# docker compose.yml — Converso VPN Full Local Stack
 version: '3.9'
 
 services:
@@ -976,7 +976,7 @@ cp .env.example .env
 npm install
 
 # 3. Start full local stack
-docker-compose up -d
+docker compose up -d
 
 # 4. Run database migrations
 npm run db:migrate

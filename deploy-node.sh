@@ -49,8 +49,8 @@ EOF
 echo "[4/7] Building Node Agent..."
 docker build -t converso-node-agent:latest .
 
-# Create docker-compose for node
-cat > /opt/converso-node/docker-compose.yml << EOF
+# Create docker compose for node
+cat > /opt/converso-node/docker compose.yml << EOF
 version: '3.9'
 services:
   node-agent:
@@ -80,7 +80,7 @@ EOF
 # Start the node
 echo "[5/7] Starting Node Agent..."
 cd /opt/converso-node
-docker-compose up -d
+docker compose up -d
 
 # Configure WireGuard
 echo "[6/7] Configuring WireGuard interface..."

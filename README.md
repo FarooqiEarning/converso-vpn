@@ -47,7 +47,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete production deployment instruct
    ```bash
    cp .env.example .env
    # Edit .env with production values
-   docker-compose -f docker-compose.prod.yml up -d
+   docker compose -f docker compose.prod.yml up -d
    ```
 
 3. **Deploy VPN Nodes**:
@@ -73,8 +73,8 @@ converso-vpn/
 ├── monitoring/
 │   ├── prometheus/   # Prometheus config
 │   └── grafana/      # Grafana dashboards
-├── docker-compose.yml        # Development
-├── docker-compose.prod.yml   # Production
+├── docker compose.yml        # Development
+├── docker compose.prod.yml   # Production
 ├── DEPLOYMENT.md            # Full deployment guide
 └── QUICK-REF.md             # Quick reference
 ```

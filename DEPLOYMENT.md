@@ -82,7 +82,7 @@ _wireguard._udp.vpn.conversoempire.world  SRV  0 5 51820 sg1.vpn.conversoempire.
 sudo apt update && sudo apt upgrade -y
 
 # Install required packages
-sudo apt install -y curl git nginx certbot python3-certbot-nginx docker.io docker-compose
+sudo apt install -y curl git nginx certbot python3-certbot-nginx docker.io docker compose
 
 # Configure firewall
 sudo ufw allow 22/tcp    # SSH
@@ -122,7 +122,7 @@ FRONTEND_URL=https://app.vpn.conversoempire.world
 ADMIN_URL=https://admin.vpn.conversoempire.world
 CORS_ORIGINS=https://app.vpn.conversoempire.world,https://admin.vpn.conversoempire.world
 
-# DATABASE (use postgres as hostname for docker-compose)
+# DATABASE (use postgres as hostname for docker compose)
 DATABASE_HOST=postgres
 DATABASE_USERNAME=converso_user
 DATABASE_PASSWORD=your_very_strong_password_here
@@ -173,13 +173,13 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out serv
 
 ```bash
 # Start production stack
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker compose.prod.yml up -d
 
 # Check status
-docker-compose -f docker-compose.prod.yml ps
+docker compose -f docker compose.prod.yml ps
 
 # View logs
-docker-compose -f docker-compose.prod.yml logs -f api
+docker compose -f docker compose.prod.yml logs -f api
 ```
 
 ### Service URLs (After Deployment)
@@ -264,8 +264,8 @@ EOF
 echo "[4/7] Building Node Agent..."
 docker build -t converso-node-agent:latest .
 
-# Create docker-compose for node
-cat > /opt/converso-node/docker-compose.yml << EOF
+# Create docker compose for node
+cat > /opt/converso-node/docker compose.yml << EOF
 version: '3.9'
 services:
   node-agent:
@@ -295,7 +295,7 @@ EOF
 # Start the node
 echo "[5/7] Starting Node Agent..."
 cd /opt/converso-node
-docker-compose up -d
+docker compose up -d
 
 # Configure WireGuard
 echo "[6/7] Configuring WireGuard interface..."
@@ -498,7 +498,7 @@ docker exec converso-nginx nginx -s reload
 
 ```bash
 # Restart all services
-docker-compose restart
+docker compose restart
 
 # View resource usage
 docker stats
@@ -510,8 +510,8 @@ docker logs -f converso-api
 docker exec -it converso-postgres psql -U converso_user -d converso_vpn
 
 # Rebuild specific service
-docker-compose build api --no-cache
-docker-compose up -d --no-deps api
+docker compose build api --no-cache
+docker compose up -d --no-deps api
 ```
 
 ---

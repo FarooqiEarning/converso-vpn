@@ -24,6 +24,9 @@ RUN addgroup -g 1001 -S nodejs && \
 # Copy compiled dist from the workspace
 COPY --from=builder --chown=nodejs:nodejs /app/apps/api/dist ./dist
 
+# Copy migrations folder
+COPY --from=builder --chown=nodejs:nodejs /app/apps/api/src/migrations ./src/migrations
+
 # Copy hoisted node_modules from root
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 

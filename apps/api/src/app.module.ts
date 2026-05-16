@@ -18,6 +18,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdInterceptor } from './common/interceptors/request-id.interceptor';
 import configuration from './config/configuration';
+import { InitialSchema1700000000000 } from './migrations/1700000000000-InitialSchema';
 
 @Module({
   imports: [
@@ -36,7 +37,9 @@ import configuration from './config/configuration';
         password: configService.get('DATABASE_PASSWORD', ''),
         database: configService.get('DATABASE_NAME', 'converso_vpn'),
         entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') !== 'production',
+        migrations: [InitialSchema1700000000000],
+        migrationsRun: true,
+        synchronize: false,
         logging: configService.get('NODE_ENV') === 'development',
         ssl: configService.get('DATABASE_SSL', false)
           ? { rejectUnauthorized: false }

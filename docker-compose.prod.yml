@@ -126,6 +126,7 @@ networks:
     name: vpn_network
 
 volumes:
+  certbot_webroot:
   postgres_data:
   redis_data:
   prometheus_data:

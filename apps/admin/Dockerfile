@@ -17,10 +17,10 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-COPY --from=builder --chown=nodejs:nodejs /apps/admin/public ./public
-COPY --from=builder --chown=nodejs:nodejs /apps/admin/.next ./.next
-COPY --from=builder --chown=nodejs:nodejs /apps/admin/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /apps/admin/package.json ./
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/public ./public
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/.next ./.next
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/apps/admin/package.json ./
 
 USER nodejs
 

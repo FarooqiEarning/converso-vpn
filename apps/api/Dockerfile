@@ -13,6 +13,10 @@ COPY turbo.json ./
 
 RUN npm run build
 
+RUN ls -la
+RUN ls -la apps/api || true
+RUN ls -la dist || true
+
 # Production
 FROM node:20-alpine AS production
 

@@ -39,9 +39,9 @@ const envSchema = Joi.object({
   STRIPE_WEBHOOK_SECRET: Joi.string().allow(''),
   STRIPE_PUBLISHABLE_KEY: Joi.string().allow(''),
 
-  SENDGRID_API_KEY: Joi.string().allow(''),
-  EMAIL_FROM: Joi.string().email().default('noreply@vpn.conversoempire.world'),
-  EMAIL_FROM_NAME: Joi.string().default('Converso VPN'),
+  RESEND_API_KEY: Joi.string().allow(''),
+  RESEND_EMAIL_FROM: Joi.string().email().default('noreply@vpn.conversoempire.world'),
+  RESEND_EMAIL_FROM_NAME: Joi.string().default('Converso VPN'),
 
   NODE_AGENT_SECRET: Joi.string().required(),
   NODE_HEARTBEAT_INTERVAL_SECONDS: Joi.number().default(30),

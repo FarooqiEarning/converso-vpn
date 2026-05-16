@@ -567,10 +567,10 @@ STRIPE_SECRET_KEY=sk_live_XXXXXXXXXXXXX
 STRIPE_WEBHOOK_SECRET=whsec_XXXXXXXXXXXXX
 STRIPE_PUBLISHABLE_KEY=pk_live_XXXXXXXXXXXXX
 
-# ─── EMAIL (SendGrid) ──────────────────────────
-SENDGRID_API_KEY=SG.XXXXXXXXXXXXX
-EMAIL_FROM=noreply@vpn.conversoempire.world
-EMAIL_FROM_NAME=Converso VPN
+# ─── EMAIL (Resend) ─────────────────────────────
+RESEND_API_KEY=re_XXXXXXXXXXXXXXXX
+RESEND_EMAIL_FROM=noreply@vpn.conversoempire.world
+RESEND_EMAIL_FROM_NAME=Converso VPN
 
 # ─── NODE AGENT SECRET ─────────────────────────
 NODE_AGENT_SECRET=GENERATE_STRONG_SECRET_FOR_AGENTS
@@ -689,7 +689,7 @@ Build:
 Rules:
 - Webhook must verify Stripe signature before processing
 - Idempotent webhook handler (safe to retry)
-- Failed payments trigger email notification via SendGrid
+- Failed payments trigger email notification via Resend
 - All Stripe errors must be caught and mapped to user-facing messages
 ```
 

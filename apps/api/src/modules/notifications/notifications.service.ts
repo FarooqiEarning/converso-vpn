@@ -1,10 +1,11 @@
 /**
  * Converso VPN - Notifications Service
- * SendGrid email integration
+ * Resend email integration
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Resend } from 'resend';
 
 interface EmailOptions {
   to: string;
@@ -16,29 +17,30 @@ interface EmailOptions {
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
-  private readonly apiKey: string;
+  private resend: Resend | null = null;
   private readonly fromEmail: string;
   private readonly fromName: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.apiKey = this.configService.get('sendgrid.apiKey') || '';
-    this.fromEmail = this.configService.get('sendgrid.emailFrom') || 'noreply@converso.vpn';
-    this.fromName = this.configService.get('sendgrid.emailFromName') || 'Converso VPN';
+    const apiKey = this.configService.get('resend.apiKey') || '';
+    this.fromEmail = this.configService.get('resend.emailFrom') || 'noreply@converso.vpn';
+    this.fromName = this.configService.get('resend.emailFromName') || 'Converso VPN';
+
+    if (apiKey) {
+      this.resend = new Resend(apiKey);
+    }
   }
 
   async sendEmail(options: EmailOptions): Promise<boolean> {
-    if (!this.apiKey) {
-      this.logger.warn('SendGrid API key not configured, skipping email');
+    if (!this.resend) {
+      this.logger.warn('Resend API key not configured, skipping email');
       return false;
     }
 
     try {
-      const sgMail = require('@sendgrid/mail');
-      sgMail.setApiKey(this.apiKey);
-
-      await sgMail.send({
+      await this.resend.emails.send({
+        from: `${this.fromName} <${this.fromEmail}>`,
         to: options.to,
-        from: { email: this.fromEmail, name: this.fromName },
         subject: options.subject,
         text: options.text,
         html: options.html || options.text,
@@ -74,6 +76,23 @@ export class NotificationsService {
       to: email,
       subject: 'Payment failed - Action required',
       text: `Your payment for Converso VPN has failed. Please update your payment method to continue using our service.\n\nLog in to your account to resolve this issue.`,
+    });
+  }
+
+  async sendVerificationEmail(email: string, verificationToken: string): Promise<void> {
+    const verifyUrl = `${this.configService.get('app.frontendUrl')}/verify-email?token=${verificationToken}`;
+    await this.sendEmail({
+      to: email,
+      subject: 'Verify your Converso VPN email',
+      text: `Click here to verify your email: ${verifyUrl}\n\nThis link expires in 24 hours.`,
+    });
+  }
+
+  async sendSubscriptionConfirmationEmail(email: string, planName: string): Promise<void> {
+    await this.sendEmail({
+      to: email,
+      subject: 'Subscription Confirmed - Converso VPN',
+      text: `Your subscription to ${planName} has been confirmed! You now have access to all premium features.\n\nThank you for choosing Converso VPN!`,
     });
   }
 }

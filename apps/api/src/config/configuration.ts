@@ -42,10 +42,10 @@ export default () => ({
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
   },
-  sendgrid: {
-    apiKey: process.env.SENDGRID_API_KEY || '',
-    emailFrom: process.env.EMAIL_FROM || 'noreply@vpn.conversoempire.world',
-    emailFromName: process.env.EMAIL_FROM_NAME || 'Converso VPN',
+  resend: {
+    apiKey: process.env.RESEND_API_KEY || '',
+    emailFrom: process.env.RESEND_EMAIL_FROM || 'noreply@vpn.mail.conversoempire.world',
+    emailFromName: process.env.RESEND_EMAIL_FROM_NAME || 'Converso VPN',
   },
   nodeAgent: {
     secret: process.env.NODE_AGENT_SECRET || '',

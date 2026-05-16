@@ -9,9 +9,13 @@ import { BillingService } from './billing.service';
 import { Payment } from './entities/payment.entity';
 import { Subscription } from '../subscriptions/entities/subscription.entity';
 import { User } from '../users/entities/user.entity';
+import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payment, Subscription, User])],
+  imports: [
+    TypeOrmModule.forFeature([Payment, Subscription, User]),
+    SubscriptionsModule,
+  ],
   controllers: [BillingController],
   providers: [BillingService],
   exports: [BillingService],

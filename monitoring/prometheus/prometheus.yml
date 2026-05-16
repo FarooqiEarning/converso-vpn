@@ -62,7 +62,7 @@ recording_rules:
       - record: 'node:load_percent:avg'
         expr: 'avg(converso_node_load_percent) by (node_id)'
       - record: 'node:peers:total'
-        - 'sum(converso_active_peers)'
+        expr: 'sum(converso_active_peers)'
 
   - name: 'api_rules'
     interval: 30s

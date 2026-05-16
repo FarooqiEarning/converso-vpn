@@ -3,19 +3,15 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies from root package.json (contains all API deps)
-COPY package*.json ./
-RUN npm install --omit=dev
+# Copy everything to allow turbo to discover workspaces
+COPY . .
 
-# Copy API-specific config files to /app (where nest expects them)
-COPY apps/api/tsconfig.json apps/api/nest-cli.json ./
+# Install all dependencies (including devDependencies needed for build)
+RUN npm install -g turbo
+RUN npm install
 
-# Copy API source code
-COPY apps/api/src ./src
-
-# Build NestJS directly — turbo cannot discover workspaces in this partial-copy context
-RUN npm install -g @nestjs/cli
-RUN nest build
+# Build the api package using turbo
+RUN turbo run build --filter=@converso/api
 
 # Production
 FROM node:20-alpine AS production
@@ -25,9 +21,18 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs && \
   adduser -S nodejs -u 1001
 
-COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
+# Copy compiled dist from the workspace
+COPY --from=builder --chown=nodejs:nodejs /app/apps/api/dist ./dist
+
+# Copy hoisted node_modules from root
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
+
+# Copy workspace node_modules (if any unhoisted dependencies exist, copy them safely)
+# We use a wildcard so it doesn't fail if the directory doesn't exist
+COPY --from=builder --chown=nodejs:nodejs /app/apps/api/node_module[s] ./apps/api/node_modules
+
+# Copy API package.json
+COPY --from=builder --chown=nodejs:nodejs /app/apps/api/package*.json ./
 
 USER nodejs
 

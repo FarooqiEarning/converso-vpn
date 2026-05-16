@@ -21,9 +21,9 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs && \
   adduser -S nodejs -u 1001
 
-COPY --from=builder --chown=nodejs:nodejs /app/apps/api/dist ./dist
-COPY --from=builder --chown=nodejs:nodejs /app/apps/api/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/apps/api/package*.json ./
+COPY --from=builder --chown=nodejs:nodejs /apps/api/dist ./dist
+COPY --from=builder --chown=nodejs:nodejs /apps/api/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /apps/api/package*.json ./
 
 USER nodejs
 

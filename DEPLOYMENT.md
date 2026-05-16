@@ -173,13 +173,13 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out serv
 
 ```bash
 # Start production stack
-docker compose -f docker compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d
 
 # Check status
-docker compose -f docker compose.prod.yml ps
+docker compose -f docker-compose.prod.yml ps
 
 # View logs
-docker compose -f docker compose.prod.yml logs -f api
+docker compose -f docker-compose.prod.yml logs -f api
 ```
 
 ### Service URLs (After Deployment)

@@ -101,7 +101,7 @@ newgrp docker
 ```bash
 # Clone the repository
 cd /opt
-sudo git clone https://github.com/your-org/converso-vpn.git
+sudo git clone https://github.com/FarooqiEarning/convrerso-vpn.git
 cd converso-vpn
 
 # Copy environment file
@@ -242,7 +242,7 @@ sysctl -p
 # Install Node Agent
 echo "[3/7] Installing Node Agent..."
 cd /opt
-git clone https://github.com/your-org/converso-vpn.git || (cd converso-vpn && git pull)
+git clone https://github.com/FarooqiEarning/convrerso-vpn.git || (cd converso-vpn && git pull)
 cd converso-vpn/apps/node-agent
 
 # Create config

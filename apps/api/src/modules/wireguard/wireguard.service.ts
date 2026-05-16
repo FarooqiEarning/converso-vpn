@@ -3,17 +3,16 @@
  * Key generation, config generation, QR code, peer management
  */
 
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { createCipheriv, randomBytes } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import * as QRCode from 'qrcode';
 import { WireGuardPeer, PeerStatus } from './entities/wireguard-peer.entity';
-import { Session } from './entities/session.entity';
 import { VpnNode } from '../vpn-nodes/entities/vpn-node.entity';
 
-interface WireGuardConfig {
+export interface WireGuardConfig {
   privateKey: string;
   address: string;
   dns: string[];
@@ -29,14 +28,11 @@ interface WireGuardConfig {
 
 @Injectable()
 export class WireGuardService {
-  private readonly logger = new Logger(WireGuardService.name);
   private readonly encryptionKey: Buffer;
 
   constructor(
     @InjectRepository(WireGuardPeer)
     private readonly peerRepository: Repository<WireGuardPeer>,
-    @InjectRepository(Session)
-    private readonly sessionRepository: Repository<Session>,
     @InjectRepository(VpnNode)
     private readonly nodeRepository: Repository<VpnNode>,
     private readonly configService: ConfigService,
@@ -85,7 +81,7 @@ export class WireGuardService {
     const iv = Buffer.from(ivB64, 'base64');
     const authTag = Buffer.from(authTagB64, 'base64');
     const encryptedData = Buffer.from(dataB64, 'base64');
-    const decipher = createCipheriv('aes-256-gcm', this.encryptionKey, iv);
+    const decipher = createDecipheriv('aes-256-gcm', this.encryptionKey, iv);
     decipher.setAuthTag(authTag);
     return decipher.update(encryptedData) + decipher.final('utf8');
   }

@@ -1,54 +1,54 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+'use client';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, CreditCard, ExternalLink } from 'lucide-react'
-import { subscriptionsApi, billingApi } from '@/lib/api'
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Check, CreditCard, ExternalLink } from 'lucide-react';
+import { subscriptionsApi, billingApi } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function BillingPage() {
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: plans } = useQuery({
     queryKey: ['plans'],
-    queryFn: () => subscriptionsApi.getPlans().then(res => res.data),
-  })
+    queryFn: () => subscriptionsApi.getPlans().then((res) => res.data),
+  });
 
   const { data: subscription } = useQuery({
     queryKey: ['subscription'],
-    queryFn: () => subscriptionsApi.getCurrent().then(res => res.data),
-  })
+    queryFn: () => subscriptionsApi.getCurrent().then((res) => res.data),
+  });
 
   const { data: payments } = useQuery({
     queryKey: ['payments'],
-    queryFn: () => billingApi.getHistory().then(res => res.data),
-  })
+    queryFn: () => billingApi.getHistory().then((res) => res.data),
+  });
 
   const checkoutMutation = useMutation({
-    mutationFn: (data: { planId: string; billingCycle: string }) =>
-      billingApi.createCheckout(data),
+    mutationFn: (data: { planId: string; billingCycle: string }) => billingApi.createCheckout(data),
     onSuccess: (res) => {
       if (res.data.checkoutUrl) {
-        window.location.href = res.data.checkoutUrl
+        window.location.href = res.data.checkoutUrl;
       }
     },
     onError: () => {
-      toast({ title: 'Failed to create checkout', variant: 'destructive' })
+      toast({ title: 'Failed to create checkout', variant: 'destructive' });
     },
-  })
+  });
 
   const portalMutation = useMutation({
     mutationFn: () => billingApi.createPortal(),
     onSuccess: (res) => {
       if (res.data.portalUrl) {
-        window.location.href = res.data.portalUrl
+        window.location.href = res.data.portalUrl;
       }
     },
     onError: () => {
-      toast({ title: 'Failed to open billing portal', variant: 'destructive' })
+      toast({ title: 'Failed to open billing portal', variant: 'destructive' });
     },
-  })
+  });
 
   return (
     <div className="space-y-8">
@@ -91,7 +91,8 @@ export default function BillingPage() {
                 <span className="text-muted-foreground">/month</span>
                 {plan.priceYearly > 0 && (
                   <p className="text-sm text-muted-foreground mt-1">
-                    or ${plan.priceYearly}/year (save {Math.round((1 - plan.priceYearly / (plan.priceMonthly * 12)) * 100)}%)
+                    or ${plan.priceYearly}/year (save{' '}
+                    {Math.round((1 - plan.priceYearly / (plan.priceMonthly * 12)) * 100)}%)
                   </p>
                 )}
               </div>
@@ -115,7 +116,9 @@ export default function BillingPage() {
                 <Button
                   className="w-full"
                   variant="outline"
-                  onClick={() => checkoutMutation.mutate({ planId: plan.id, billingCycle: 'monthly' })}
+                  onClick={() =>
+                    checkoutMutation.mutate({ planId: plan.id, billingCycle: 'monthly' })
+                  }
                 >
                   {subscription ? 'Upgrade' : 'Subscribe'}
                 </Button>
@@ -143,11 +146,15 @@ export default function BillingPage() {
                   <td className="p-4">{new Date(payment.createdAt).toLocaleDateString()}</td>
                   <td className="p-4">${payment.amount.toFixed(2)}</td>
                   <td className="p-4">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      payment.status === 'succeeded' ? 'bg-green-500/20 text-green-500' :
-                      payment.status === 'failed' ? 'bg-red-500/20 text-red-500' :
-                      'bg-yellow-500/20 text-yellow-500'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        payment.status === 'succeeded'
+                          ? 'bg-green-500/20 text-green-500'
+                          : payment.status === 'failed'
+                            ? 'bg-red-500/20 text-red-500'
+                            : 'bg-yellow-500/20 text-yellow-500'
+                      }`}
+                    >
                       {payment.status}
                     </span>
                   </td>
@@ -171,5 +178,5 @@ export default function BillingPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

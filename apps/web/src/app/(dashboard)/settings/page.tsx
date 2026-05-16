@@ -1,38 +1,38 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useSession } from 'next-auth/react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { User, Lock, Shield, Trash2 } from 'lucide-react'
-import { usersApi } from '@/lib/api'
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { User, Lock, Trash2 } from 'lucide-react';
+import { usersApi } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function SettingsPage() {
-  const { data: session } = useSession()
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
-  const [fullName, setFullName] = useState(session?.user?.name || '')
+  const { data: session } = useSession();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [fullName, setFullName] = useState(session?.user?.name || '');
 
   const updateMutation = useMutation({
     mutationFn: (data: { fullName: string }) => usersApi.updateProfile(data),
     onSuccess: () => {
-      toast({ title: 'Profile updated' })
-      queryClient.invalidateQueries({ queryKey: ['profile'] })
+      toast({ title: 'Profile updated' });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: () => usersApi.deleteAccount(),
     onSuccess: () => {
-      window.location.href = '/'
+      window.location.href = '/';
     },
-  })
+  });
 
   const handleUpdateProfile = (e: React.FormEvent) => {
-    e.preventDefault()
-    updateMutation.mutate({ fullName })
-  }
+    e.preventDefault();
+    updateMutation.mutate({ fullName });
+  };
 
   return (
     <div className="space-y-8 max-w-2xl">
@@ -103,8 +103,10 @@ export default function SettingsPage() {
         <Button
           variant="destructive"
           onClick={() => {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-              deleteMutation.mutate()
+            if (
+              confirm('Are you sure you want to delete your account? This action cannot be undone.')
+            ) {
+              deleteMutation.mutate();
             }
           }}
         >
@@ -112,5 +114,5 @@ export default function SettingsPage() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

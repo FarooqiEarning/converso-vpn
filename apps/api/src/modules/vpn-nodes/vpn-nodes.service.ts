@@ -2,15 +2,15 @@
  * Converso VPN - VPN Nodes Service
  */
 
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, In } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { VpnNode, NodeStatus } from './entities/vpn-node.entity';
 import { NodeMetric } from './entities/node-metric.entity';
 
 @Injectable()
 export class VpnNodesService {
-  private readonly logger = new Logger(VpnNodesService.name);
+
 
   constructor(
     @InjectRepository(VpnNode)

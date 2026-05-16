@@ -5,8 +5,6 @@
 import {
   Controller,
   Get,
-  Post,
-  Delete,
   Param,
   UseGuards,
   Res,
@@ -15,15 +13,13 @@ import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { WireGuardService } from './wireguard.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../users/entities/user.entity';
 
 @ApiTags('wireguard')
 @Controller('wireguard')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class WireGuardController {
-  constructor(private readonly wireGuardService: WireGuardService) {}
+  constructor(private readonly wireGuardService: WireGuardService) { }
 
   @Get('config/:peerId')
   @ApiOperation({ summary: 'Get peer WireGuard config' })

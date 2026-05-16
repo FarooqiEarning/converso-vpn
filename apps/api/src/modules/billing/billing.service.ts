@@ -22,7 +22,6 @@ export class BillingService {
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
     @InjectRepository(Subscription)
-    private readonly subscriptionRepository: Repository<Subscription>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
@@ -141,19 +140,19 @@ export class BillingService {
 
     const stripeSub = await this.stripe.subscriptions.retrieve(session.subscription as string);
 
-    await this.subscriptionsService.createSubscription(
+    const sub = await this.subscriptionsService.createSubscription(
       metadata.userId,
       metadata.planId,
       stripeSub.id,
       metadata.billingCycle || 'monthly',
     );
 
+
     await this.createPaymentRecord(metadata.userId, {
       gatewayPaymentId: session.payment_intent as string,
       amount: (session.amount_total || 0) / 100,
       status: 'succeeded',
-      stripeSubscriptionId: session.subscription as string,
-      stripeCustomerId: session.customer as string,
+      subscriptionId: sub.id,
     });
   }
 
@@ -166,6 +165,7 @@ export class BillingService {
       incomplete: 'active',
       incomplete_expired: 'expired',
       paused: 'active',
+      unpaid: 'unpaid',
     };
 
     await this.subscriptionsService.updateFromStripe(
@@ -207,8 +207,7 @@ export class BillingService {
       gatewayPaymentId: string;
       amount: number;
       status: string;
-      stripeSubscriptionId?: string;
-      stripeCustomerId?: string;
+      subscriptionId?: string;
     },
   ): Promise<void> {
     const payment = this.paymentRepository.create({
@@ -218,8 +217,7 @@ export class BillingService {
       status: data.status as any,
       gateway: PaymentGateway.STRIPE,
       gatewayPaymentId: data.gatewayPaymentId,
-      stripeSubscriptionId: data.stripeSubscriptionId,
-      stripeCustomerId: data.stripeCustomerId,
+      subscriptionId: data.subscriptionId,
       paidAt: data.status === 'succeeded' ? new Date() : undefined,
     });
 

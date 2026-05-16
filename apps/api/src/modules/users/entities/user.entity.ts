@@ -10,7 +10,6 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Index,
-  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 

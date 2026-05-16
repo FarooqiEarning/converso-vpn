@@ -5,9 +5,7 @@
 import {
   Controller,
   Get,
-  Post,
   Delete,
-  Body,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';

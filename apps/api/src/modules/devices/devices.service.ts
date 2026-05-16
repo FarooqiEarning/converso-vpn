@@ -89,7 +89,7 @@ export class DevicesService {
   }
 
   async delete(peerId: string, userId: string): Promise<void> {
-    const peer = await this.findById(peerId, userId);
+    await this.findById(peerId, userId);
     await this.wireGuardService.revokePeer(peerId);
   }
 }

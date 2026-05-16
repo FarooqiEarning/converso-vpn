@@ -1,28 +1,29 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
 
-import { useSession } from 'next-auth/react'
-import { useQuery } from '@tanstack/react-query'
-import { Server, Smartphone, Activity, Clock } from 'lucide-react'
-import { subscriptionsApi, devicesApi, usersApi } from '@/lib/api'
-import { formatBytes } from '@/lib/utils'
+import { useSession } from 'next-auth/react';
+import { useQuery } from '@tanstack/react-query';
+import { Server, Smartphone, Activity, Clock } from 'lucide-react';
+import { subscriptionsApi, devicesApi, usersApi } from '@/lib/api';
+import { formatBytes } from '@/lib/utils';
 
 export default function DashboardPage() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   const { data: subscription } = useQuery({
     queryKey: ['subscription'],
-    queryFn: () => subscriptionsApi.getCurrent().then(res => res.data),
-  })
+    queryFn: () => subscriptionsApi.getCurrent().then((res) => res.data),
+  });
 
   const { data: devices } = useQuery({
     queryKey: ['devices'],
-    queryFn: () => devicesApi.getAll().then(res => res.data),
-  })
+    queryFn: () => devicesApi.getAll().then((res) => res.data),
+  });
 
   const { data: usage } = useQuery({
     queryKey: ['usage'],
-    queryFn: () => usersApi.getUsage().then(res => res.data),
-  })
+    queryFn: () => usersApi.getUsage().then((res) => res.data),
+  });
 
   return (
     <div className="space-y-8">
@@ -103,7 +104,10 @@ export default function DashboardPage() {
           <h2 className="text-xl font-semibold mb-4">Recent Devices</h2>
           <div className="space-y-3">
             {devices?.slice(0, 3).map((device: any) => (
-              <div key={device.id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              <div
+                key={device.id}
+                className="flex items-center justify-between p-4 bg-muted rounded-lg"
+              >
                 <div className="flex items-center gap-3">
                   <Smartphone className="w-5 h-5 text-muted-foreground" />
                   <div>
@@ -123,5 +127,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

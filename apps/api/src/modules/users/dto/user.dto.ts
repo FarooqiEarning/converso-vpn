@@ -2,7 +2,7 @@
  * Converso VPN - User DTOs
  */
 
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, MinLength } from 'class-validator';
 
 export class UpdateUserDto {

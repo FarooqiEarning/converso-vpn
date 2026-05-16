@@ -1,79 +1,77 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
 
-import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus, Smartphone, Download, Trash2, QrCode } from 'lucide-react'
-import { devicesApi } from '@/lib/api'
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Plus, Smartphone, Download, Trash2, QrCode } from 'lucide-react';
+import { devicesApi, nodesApi } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function DevicesPage() {
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
-  const [isCreating, setIsCreating] = useState(false)
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [isCreating, setIsCreating] = useState(false);
 
   const { data: devices, isLoading } = useQuery({
     queryKey: ['devices'],
-    queryFn: () => devicesApi.getAll().then(res => res.data),
-  })
+    queryFn: () => devicesApi.getAll().then((res) => res.data),
+  });
 
   const { data: nodes } = useQuery({
     queryKey: ['nodes'],
-    queryFn: () => {
-      const { default: api } = require('@/lib/api')
-      return api.nodesApi.getAll().then(res => res.data)
-    },
-  })
+    queryFn: () => nodesApi.getAll().then((res: any) => res.data),
+  });
 
   const createMutation = useMutation({
     mutationFn: (data: { nodeId: string; deviceName: string; deviceType?: string }) =>
       devicesApi.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['devices'] })
-      setIsCreating(false)
-      toast({ title: 'Device created successfully' })
+      queryClient.invalidateQueries({ queryKey: ['devices'] });
+      setIsCreating(false);
+      toast({ title: 'Device created successfully' });
     },
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => devicesApi.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['devices'] })
-      toast({ title: 'Device deleted' })
+      queryClient.invalidateQueries({ queryKey: ['devices'] });
+      toast({ title: 'Device deleted' });
     },
-  })
+  });
 
   const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     createMutation.mutate({
       nodeId: formData.get('nodeId') as string,
       deviceName: formData.get('deviceName') as string,
       deviceType: formData.get('deviceType') as string,
-    })
-  }
+    });
+  };
 
   const handleDownload = async (deviceId: string) => {
     try {
-      const response = await devicesApi.downloadConfig(deviceId)
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', 'converso-vpn.conf')
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
+      const response = await devicesApi.downloadConfig(deviceId);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'converso-vpn.conf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } catch (error) {
-      toast({ title: 'Failed to download config', variant: 'destructive' })
+      toast({ title: 'Failed to download config', variant: 'destructive' });
     }
-  }
+  };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
-    )
+    );
   }
 
   return (
@@ -110,7 +108,9 @@ export default function DevicesPage() {
                 className="w-full px-4 py-3 bg-muted border border-border rounded-lg"
               >
                 {nodes?.map((node: any) => (
-                  <option key={node.id} value={node.id}>{node.name}</option>
+                  <option key={node.id} value={node.id}>
+                    {node.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -186,5 +186,5 @@ export default function DevicesPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

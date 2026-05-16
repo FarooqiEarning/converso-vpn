@@ -9,8 +9,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
-import { RequestIdInterceptor } from './common/interceptors/request-id.interceptor';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
@@ -31,10 +30,7 @@ async function bootstrap(): Promise<void> {
   );
 
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(
-    new RequestIdInterceptor(),
-    new LoggingInterceptor(),
-  );
+
 
   app.enableCors({
     origin: configService.get('CORS_ORIGINS', '').split(','),

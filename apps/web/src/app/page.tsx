@@ -1,14 +1,13 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl text-center space-y-8">
-        <h1 className="text-6xl font-bold gradient-text">
-          Converso VPN
-        </h1>
+        <h1 className="text-6xl font-bold gradient-text">Converso VPN</h1>
         <p className="text-xl text-muted-foreground">
-          Secure, fast, and private VPN for everyone. Connect to servers worldwide with enterprise-grade encryption.
+          Secure, fast, and private VPN for everyone. Connect to servers worldwide with
+          enterprise-grade encryption.
         </p>
         <div className="flex gap-4 justify-center">
           <Link
@@ -26,5 +25,5 @@ export default function HomePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

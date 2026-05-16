@@ -14,6 +14,9 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
 import { BillingModule } from './modules/billing/billing.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { RequestIdInterceptor } from './common/interceptors/request-id.interceptor';
 import configuration from './config/configuration';
 
 @Module({
@@ -54,6 +57,16 @@ import configuration from './config/configuration';
     BillingModule,
     AnalyticsModule,
     NotificationsModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RequestIdInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
   ],
   exports: [TypeOrmModule],
 })

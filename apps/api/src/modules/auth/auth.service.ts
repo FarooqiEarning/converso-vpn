@@ -13,7 +13,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { createHash, randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { User, UserStatus } from '../users/entities/user.entity';
 import {
@@ -78,7 +77,7 @@ export class AuthService {
     }
 
     user.lastLoginAt = new Date();
-    user.lastLoginIp = dto.ip;
+    user.lastLoginIp = dto.ip ?? null;
     await this.userRepository.save(user);
 
     return this.generateTokens(user);

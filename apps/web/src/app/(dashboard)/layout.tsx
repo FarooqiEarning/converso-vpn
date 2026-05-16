@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { LayoutDashboard, Server, Smartphone, CreditCard, Settings, LogOut } from 'lucide-react'
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { LayoutDashboard, Server, Smartphone, CreditCard, Settings, LogOut } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -12,21 +12,21 @@ const navItems = [
   { href: '/dashboard/devices', label: 'Devices', icon: Smartphone },
   { href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-]
+];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
 
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
-    )
+    );
   }
 
   if (!session) {
-    redirect('/login')
+    redirect('/login');
   }
 
   return (
@@ -60,5 +60,5 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
       <main className="flex-1 p-8">{children}</main>
     </div>
-  )
+  );
 }

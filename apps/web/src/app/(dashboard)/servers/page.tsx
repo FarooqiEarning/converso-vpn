@@ -1,27 +1,28 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
 
-import { useQuery } from '@tanstack/react-query'
-import { nodesApi } from '@/lib/api'
-import { getCountryFlag, cn } from '@/lib/utils'
-import { Server, Signal, Zap } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query';
+import { nodesApi } from '@/lib/api';
+import { getCountryFlag, cn } from '@/lib/utils';
+import { Server, Signal, Zap } from 'lucide-react';
 
 export default function ServersPage() {
   const { data: nodes, isLoading } = useQuery({
     queryKey: ['nodes'],
-    queryFn: () => nodesApi.getAll().then(res => res.data),
-  })
+    queryFn: () => nodesApi.getAll().then((res) => res.data),
+  });
 
   const { data: countries } = useQuery({
     queryKey: ['countries'],
-    queryFn: () => nodesApi.getCountries().then(res => res.data),
-  })
+    queryFn: () => nodesApi.getCountries().then((res) => res.data),
+  });
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
-    )
+    );
   }
 
   return (
@@ -53,14 +54,18 @@ export default function ServersPage() {
               className="glassmorphism p-4 rounded-xl flex items-center justify-between hover:bg-muted/30 transition"
             >
               <div className="flex items-center gap-4">
-                <div className={cn(
-                  'p-3 rounded-lg',
-                  node.status === 'online' ? 'bg-green-500/10' : 'bg-red-500/10'
-                )}>
-                  <Server className={cn(
-                    'w-6 h-6',
-                    node.status === 'online' ? 'text-green-500' : 'text-red-500'
-                  )} />
+                <div
+                  className={cn(
+                    'p-3 rounded-lg',
+                    node.status === 'online' ? 'bg-green-500/10' : 'bg-red-500/10'
+                  )}
+                >
+                  <Server
+                    className={cn(
+                      'w-6 h-6',
+                      node.status === 'online' ? 'text-green-500' : 'text-red-500'
+                    )}
+                  />
                 </div>
                 <div>
                   <p className="font-medium">{node.name}</p>
@@ -93,5 +98,5 @@ export default function ServersPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

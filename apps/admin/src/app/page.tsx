@@ -1,40 +1,60 @@
-'use client'
+'use client';
 
-import { useQuery } from '@tanstack/react-query'
-import { Users, Server, CreditCard, Activity, DollarSign, TrendingUp } from 'lucide-react'
-import axios from 'axios'
+import { useQuery } from '@tanstack/react-query';
+import { Users, Server, CreditCard, Activity, DollarSign, TrendingUp } from 'lucide-react';
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/v1',
-})
+});
 
 export default function AdminDashboard() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const token = localStorage.getItem('admin-token')
+      const token = localStorage.getItem('admin-token');
       const res = await api.get('/analytics/overview', {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })
-      return res.data
+      });
+      return res.data;
     },
-  })
+  });
 
   const statCards = [
     { label: 'Total Users', value: stats?.totalUsers || 0, icon: Users, color: 'text-blue-500' },
-    { label: 'Active Subscriptions', value: stats?.activeSubscriptions || 0, icon: CreditCard, color: 'text-green-500' },
-    { label: 'Active Nodes', value: stats?.activeNodes || 0, icon: Server, color: 'text-purple-500' },
-    { label: 'Active Peers', value: stats?.activePeers || 0, icon: Activity, color: 'text-orange-500' },
-    { label: 'Total Revenue', value: `$${(stats?.totalRevenue || 0).toFixed(2)}`, icon: DollarSign, color: 'text-yellow-500' },
+    {
+      label: 'Active Subscriptions',
+      value: stats?.activeSubscriptions || 0,
+      icon: CreditCard,
+      color: 'text-green-500',
+    },
+    {
+      label: 'Active Nodes',
+      value: stats?.activeNodes || 0,
+      icon: Server,
+      color: 'text-purple-500',
+    },
+    {
+      label: 'Active Peers',
+      value: stats?.activePeers || 0,
+      icon: Activity,
+      color: 'text-orange-500',
+    },
+    {
+      label: 'Total Revenue',
+      value: `$${(stats?.totalRevenue || 0).toFixed(2)}`,
+      icon: DollarSign,
+      color: 'text-yellow-500',
+    },
     { label: 'Growth', value: '+12%', icon: TrendingUp, color: 'text-emerald-500' },
-  ]
+  ];
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
-    )
+    );
   }
 
   return (
@@ -110,5 +130,5 @@ export default function AdminDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -10,7 +10,7 @@ import { Subscription, SubscriptionStatus } from '../subscriptions/entities/subs
 import { Payment, PaymentStatus } from '../billing/entities/payment.entity';
 import { VpnNode, NodeStatus } from '../vpn-nodes/entities/vpn-node.entity';
 
-interface OverviewStats {
+export interface OverviewStats {
   totalUsers: number;
   activeSubscriptions: number;
   totalRevenue: number;
@@ -18,7 +18,7 @@ interface OverviewStats {
   activePeers: number;
 }
 
-interface RevenueData {
+export interface RevenueData {
   date: string;
   revenue: number;
 }

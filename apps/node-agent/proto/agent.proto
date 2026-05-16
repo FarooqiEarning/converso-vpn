@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/converso/node-agent/proto";
+
+service Agent {
+  rpc AddPeer(AddPeerRequest) returns (AddPeerResponse);
+  rpc RemovePeer(RemovePeerRequest) returns (RemovePeerResponse);
+  rpc GetPeerStats(GetPeerStatsRequest) returns (PeerStatsResponse);
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message AddPeerRequest {
+  string public_key = 1;
+  string private_key = 2;
+  string preshared_key = 3;
+  repeated string allowed_ips = 4;
+  string endpoint = 5;
+  int32 keepalive = 6;
+}
+
+message AddPeerResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message RemovePeerRequest {
+  string public_key = 1;
+}
+
+message RemovePeerResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message GetPeerStatsRequest {
+  string public_key = 1;
+}
+
+message PeerStatsResponse {
+  string public_key = 1;
+  uint64 bytes_received = 2;
+  uint64 bytes_sent = 3;
+  int64 last_handshake = 4;
+  string endpoint = 5;
+  repeated string allowed_ips = 6;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string status = 1;
+  int32 active_peers = 2;
+  string error = 3;
+}

@@ -1,0 +1,73 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'converso-vpn'
+    environment: 'development'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Control Plane API
+  - job_name: 'converso-api'
+    static_configs:
+      - targets: ['api:3000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Node Agents (VPN Nodes)
+  - job_name: 'vpn-nodes'
+    static_configs:
+      - targets: ['node-agent-1:9100', 'node-agent-2:9100', 'node-agent-3:9100']
+    scrape_interval: 30s
+    dns_sd_configs:
+      - names:
+          - 'vpn-nodes'
+        type: A
+        port: 9100
+
+  # Nginx metrics (if available)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    scrape_interval: 30s
+
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 30s
+
+  # PostgreSQL metrics (if exporter added)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+    scrape_interval: 60s
+
+# Recording rules for faster queries
+recording_rules:
+  - name: 'vpn_node_rules'
+    interval: 30s
+    rules:
+      - record: 'node:load_percent:avg'
+        expr: 'avg(converso_node_load_percent) by (node_id)'
+      - record: 'node:peers:total'
+        - 'sum(converso_active_peers)'
+
+  - name: 'api_rules'
+    interval: 30s
+    rules:
+      - record: 'api:request_duration:p99'
+        expr: 'histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))'
+      - record: 'api:error_rate:5xx'
+        expr: 'sum(rate(http_requests_total{service="api",status=~"5.."}[5m])) / sum(rate(http_requests_total{service="api"}[5m]))'

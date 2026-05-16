@@ -11,7 +11,7 @@ RUN npm install -g turbo
 RUN npm install
 
 # Build the api package using turbo
-RUN turbo run build --filter=@converso/api
+RUN turbo run build --filter=@converso-vpn/api
 
 # Production
 FROM node:20-alpine AS production

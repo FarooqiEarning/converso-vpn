@@ -3,15 +3,18 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Install dependencies from root package.json (contains all API deps)
 COPY package*.json ./
-RUN npm install -g turbo
 RUN npm install --omit=dev
 
+# Copy API-specific config files to /app (where nest expects them)
 COPY apps/api/tsconfig.json apps/api/nest-cli.json ./
-COPY apps/api/src ./src
-COPY turbo.json ./
 
-RUN npm run build
+# Copy API source code
+COPY apps/api/src ./src
+
+# Build NestJS directly — turbo cannot discover workspaces in this partial-copy context
+RUN npx nest build
 
 # Production
 FROM node:20-alpine AS production
@@ -30,6 +33,6 @@ USER nodejs
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e require('http').get('http://localhost:3000/v1', (r) => process.exit(r.statusCode === 200 ? 0 : 1))
+  CMD node -e "require('http').get('http://localhost:3000/v1', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
 
 CMD ["node", "dist/main.js"]

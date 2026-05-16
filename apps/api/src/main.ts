@@ -2,7 +2,7 @@
  * Converso VPN - Control Plane API Entry Point
  * Production-ready with graceful shutdown, health checks, and structured logging
  */
-
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';

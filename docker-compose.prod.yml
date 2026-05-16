@@ -13,6 +13,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app_network
 
   redis:
     image: redis:7-alpine
@@ -20,6 +22,8 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
+    networks:
+      - app_network
 
   api:
     build:
@@ -42,6 +46,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 15s
+    networks:
+      - app_network
 
   web:
     build:
@@ -53,11 +59,13 @@ services:
     ports:
       - "3001:3001"
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=3", "--spider", "http://localhost:3001"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 15s
+    networks:
+      - app_network
 
   nginx:
     image: nginx:alpine
@@ -69,11 +77,34 @@ services:
       - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d
       - ./infrastructure/nginx/ssl:/etc/nginx/ssl
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+      - nginx_cache:/var/cache/nginx
     depends_on:
       api:
         condition: service_healthy
       web:
         condition: service_healthy
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "nginx -t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  certbot:
+    image: certbot/certbot:latest
+    restart: always
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    environment:
+      CERTBOT_EMAIL: ${CERTBOT_EMAIL:-admin@conversoempire.world}
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --deploy-hook 'nginx -s reload' --quiet; sleep 12h & wait $${!}; done"
+    networks:
+      - app_network
 
   prometheus:
     image: prom/prometheus:latest
@@ -83,6 +114,8 @@ services:
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+    networks:
+      - app_network
 
   grafana:
     image: grafana/grafana:latest
@@ -97,9 +130,19 @@ services:
       - "3002:3000"
     depends_on:
       - prometheus
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+    name: vpn_network
 
 volumes:
   postgres_data:
   redis_data:
   prometheus_data:
   grafana_data:
+  certbot_conf:
+  certbot_www:
+  nginx_cache:

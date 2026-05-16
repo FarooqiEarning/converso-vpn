@@ -22,7 +22,7 @@ COPY --from=builder --chown=nodejs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/package.json ./
 COPY --from=builder --chown=nodejs:nodejs /app/next.config.js ./
-COPY --from=builder --chown=nodejs:nodejs /app/.next.zip ./.next.zip || true
+COPY --from=builder --chown=nodejs:nodejs /app/.next.zi[p] ./
 
 USER nodejs
 

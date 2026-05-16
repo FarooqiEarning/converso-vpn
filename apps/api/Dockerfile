@@ -8,7 +8,7 @@ COPY package-lock.json* ./
 RUN npm install --omit=dev
 
 COPY tsconfig.json nest-cli.json ./
-COPY src ./src
+COPY apps/api/src ./src
 
 RUN npm run build
 

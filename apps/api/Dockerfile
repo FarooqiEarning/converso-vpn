@@ -14,7 +14,8 @@ COPY apps/api/tsconfig.json apps/api/nest-cli.json ./
 COPY apps/api/src ./src
 
 # Build NestJS directly — turbo cannot discover workspaces in this partial-copy context
-RUN npx nest build
+RUN npm install -g @nestjs/cli
+RUN nest build
 
 # Production
 FROM node:20-alpine AS production

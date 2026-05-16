@@ -7,7 +7,7 @@ COPY package*.json ./
 COPY package-lock.json* ./
 RUN npm install --omit=dev
 
-COPY apps/api/tsconfig.json nest-cli.json ./
+COPY apps/api/tsconfig.json apps/api/nest-cli.json ./
 COPY apps/api/src ./src
 
 RUN npm run build
